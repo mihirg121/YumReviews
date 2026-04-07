@@ -10,15 +10,19 @@ export default function App() {
   const [rating, setRating] = useState(5)
   const [loading, setLoading] = useState(false)
   const [editingId, setEditingId] = useState(null)
+  const [resetMode, setResetMode] = useState(false)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       if (session) fetchEntries()
     })
-    supabase.auth.onAuthStateChange((_event, session) => {
+    supabase.auth.onAuthStateChange((event, session) => {
       setSession(session)
       if (session) fetchEntries()
+      if (event === 'PASSWORD_RECOVERY') {
+        setResetMode(true)
+      }
     })
   }, [])
 
@@ -83,6 +87,10 @@ export default function App() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
+  }
+
+  if (resetMode && session) {
+    return <ResetPassword onDone={() => setResetMode(false)} />
   }
 
   if (!session) {
@@ -169,10 +177,59 @@ export default function App() {
   )
 }
 
+function ResetPassword({ onDone }) {
+  const [newPassword, setNewPassword] = useState('')
+  const [message, setMessage] = useState('')
+
+  const handleReset = async () => {
+    if (newPassword.length < 6) {
+      setMessage('Password must be at least 6 characters')
+      return
+    }
+    const { error } = await supabase.auth.updateUser({ password: newPassword })
+    if (error) {
+      setMessage(error.message)
+    } else {
+      setMessage('✅ Password updated successfully!')
+      setTimeout(() => onDone(), 2000)
+    }
+  }
+
+  return (
+    <div className="login-container">
+      <h1>YumReviews 🍜</h1>
+      <h2>Set your new password</h2>
+      <input
+        className="form-input"
+        type="password"
+        placeholder="New password"
+        value={newPassword}
+        onChange={(e) => setNewPassword(e.target.value)}
+      />
+      {message && (
+        <p className={message.startsWith('✅') ? 'login-success' : 'login-error'}>
+          {message}
+        </p>
+      )}
+      <button className="btn-primary" onClick={handleReset} style={{ width: '100%' }}>
+        Update Password
+      </button>
+      <p style={{
+        marginTop: '2rem',
+        color: '#bbb',
+        fontSize: '0.85rem'
+      }}>
+        Made with ❤️ by Mihir Gogri
+      </p>
+    </div>
+  )
+}
+
 function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
+  const [isForgot, setIsForgot] = useState(false)
   const [message, setMessage] = useState('')
 
   const handleAuth = async () => {
@@ -185,6 +242,59 @@ function Login() {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) setMessage(error.message)
     }
+  }
+
+  const handleForgotPassword = async () => {
+    setMessage('')
+    if (!email) {
+      setMessage('Please enter your email first')
+      return
+    }
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin
+    })
+    if (error) {
+      setMessage(error.message)
+    } else {
+      setMessage('✅ Check your email for a password reset link!')
+    }
+  }
+
+  if (isForgot) {
+    return (
+      <div className="login-container">
+        <h1>YumReviews 🍜</h1>
+        <h2>Reset your password</h2>
+        <input
+          className="form-input"
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        {message && (
+          <p className={message.startsWith('✅') ? 'login-success' : 'login-error'}>
+            {message}
+          </p>
+        )}
+        <button className="btn-primary" onClick={handleForgotPassword} style={{ width: '100%' }}>
+          Send Reset Link
+        </button>
+        <p className="login-switch">
+          Remember your password?{' '}
+          <button onClick={() => { setIsForgot(false); setMessage('') }}>
+            Back to Log In
+          </button>
+        </p>
+        <p style={{
+          marginTop: '2rem',
+          color: '#bbb',
+          fontSize: '0.85rem'
+        }}>
+          Made with ❤️ by Mihir Gogri
+        </p>
+      </div>
+    )
   }
 
   return (
@@ -213,9 +323,16 @@ function Login() {
       <button className="btn-primary" onClick={handleAuth} style={{ width: '100%' }}>
         {isSignUp ? 'Sign Up' : 'Log In'}
       </button>
+      {!isSignUp && (
+        <p className="login-switch">
+          <button onClick={() => { setIsForgot(true); setMessage('') }}>
+            Forgot password?
+          </button>
+        </p>
+      )}
       <p className="login-switch">
         {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
-        <button onClick={() => setIsSignUp(!isSignUp)}>
+        <button onClick={() => { setIsSignUp(!isSignUp); setMessage('') }}>
           {isSignUp ? 'Log In' : 'Sign Up'}
         </button>
       </p>
