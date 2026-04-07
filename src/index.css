@@ -1,0 +1,301 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #faf7f2;
+  color: #2d2d2d;
+  line-height: 1.6;
+}
+
+/* Layout */
+.app-container {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f0e6d6;
+}
+
+.header h1 {
+  font-size: 1.8rem;
+  color: #d35400;
+}
+
+.btn-logout {
+  background: none;
+  border: 1px solid #ccc;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #888;
+  transition: all 0.2s;
+}
+
+.btn-logout:hover {
+  border-color: #d35400;
+  color: #d35400;
+}
+
+/* Form Card */
+.form-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 2px solid transparent;
+  transition: all 0.3s;
+}
+
+.form-card.editing {
+  background: #fffdf5;
+  border-color: #ffb300;
+}
+
+.form-card h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.form-input {
+  display: block;
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #d35400;
+}
+
+textarea.form-input {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Rating Slider */
+.rating-group {
+  margin-bottom: 1rem;
+}
+
+.rating-group label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.rating-slider {
+  width: 100%;
+  accent-color: #d35400;
+}
+
+/* Buttons */
+.btn-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-primary {
+  background: #d35400;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #b94700;
+}
+
+.btn-primary:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.btn-cancel {
+  background: #f0f0f0;
+  color: #666;
+  border: 1px solid #ddd;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #e0e0e0;
+}
+
+/* Feed */
+.feed-header {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: #555;
+}
+
+.feed-empty {
+  text-align: center;
+  color: #aaa;
+  padding: 2rem;
+  font-style: italic;
+}
+
+/* Entry Card */
+.entry-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.entry-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.entry-card.editing {
+  border-color: #ffb300;
+  background: #fffdf5;
+}
+
+.entry-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.entry-top h3 {
+  font-size: 1.1rem;
+  color: #222;
+}
+
+.entry-stars {
+  font-size: 1rem;
+  letter-spacing: 2px;
+}
+
+.entry-review {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+}
+
+.entry-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.entry-date {
+  color: #bbb;
+  font-size: 0.8rem;
+}
+
+.entry-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn-edit,
+.btn-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: opacity 0.2s;
+}
+
+.btn-edit {
+  color: #1976d2;
+}
+
+.btn-delete {
+  color: #e53935;
+}
+
+.btn-edit:hover,
+.btn-delete:hover {
+  opacity: 0.7;
+}
+
+/* Login Page */
+.login-container {
+  max-width: 400px;
+  margin: 6rem auto;
+  padding: 2.5rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.login-container h1 {
+  font-size: 2rem;
+  color: #d35400;
+  margin-bottom: 0.25rem;
+}
+
+.login-container h2 {
+  font-size: 1.1rem;
+  color: #888;
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+}
+
+.login-error {
+  color: #e53935;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.login-success {
+  color: #2e7d32;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.login-switch {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.login-switch button {
+  background: none;
+  border: none;
+  color: #d35400;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.login-switch button:hover {
+  text-decoration: underline;
+}
