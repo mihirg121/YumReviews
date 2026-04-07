@@ -1,7 +1,7 @@
 {
   "name": "yumreviews",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "private": true,
   "version": "0.0.0",
@@ -13,6 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.102.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
