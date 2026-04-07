@@ -6,6 +6,7 @@ export default function App() {
   const [session, setSession] = useState(null)
   const [entries, setEntries] = useState([])
   const [foodName, setFoodName] = useState('')
+  const [location, setLocation] = useState('')
   const [review, setReview] = useState('')
   const [rating, setRating] = useState(5)
   const [loading, setLoading] = useState(false)
@@ -42,13 +43,14 @@ export default function App() {
     if (editingId) {
       const { error } = await supabase
         .from('food_entries')
-        .update({ food_name: foodName, review, rating })
+        .update({ food_name: foodName, location, review, rating })
         .eq('id', editingId)
       if (error) console.error('Update error:', error.message)
       setEditingId(null)
     } else {
       const { error } = await supabase.from('food_entries').insert({
         food_name: foodName,
+        location,
         review,
         rating,
         user_id: session.user.id
@@ -57,6 +59,7 @@ export default function App() {
     }
 
     setFoodName('')
+    setLocation('')
     setReview('')
     setRating(5)
     await fetchEntries()
@@ -66,6 +69,7 @@ export default function App() {
   const startEdit = (entry) => {
     setEditingId(entry.id)
     setFoodName(entry.food_name)
+    setLocation(entry.location || '')
     setReview(entry.review || '')
     setRating(entry.rating)
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -74,6 +78,7 @@ export default function App() {
   const cancelEdit = () => {
     setEditingId(null)
     setFoodName('')
+    setLocation('')
     setReview('')
     setRating(5)
   }
@@ -113,6 +118,13 @@ export default function App() {
           value={foodName}
           onChange={(e) => setFoodName(e.target.value)}
         />
+        <input
+          className="form-input"
+          type="text"
+          placeholder="📍 Location (e.g. Joe's Pizza, NYC)"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+        />
         <textarea
           className="form-input"
           placeholder="Write your review..."
@@ -148,6 +160,11 @@ export default function App() {
             <h3>{entry.food_name}</h3>
             <span className="entry-stars">{'⭐'.repeat(entry.rating)}</span>
           </div>
+          {entry.location && (
+            <p style={{ color: '#888', fontSize: '0.9rem', margin: '0.25rem 0 0.5rem' }}>
+              📍 {entry.location}
+            </p>
+          )}
           {entry.review && <p className="entry-review">{entry.review}</p>}
           <div className="entry-bottom">
             <small className="entry-date">
