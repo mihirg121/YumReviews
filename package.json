@@ -1,5 +1,8 @@
 {
   "name": "yumreviews",
+  "engines": {
+    "node": ">=18"
+  },
   "private": true,
   "version": "0.0.0",
   "type": "module",
