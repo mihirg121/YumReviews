@@ -34,6 +34,8 @@ function MainApp({ session }) {
   const [location, setLocation] = useState('')
   const [review, setReview] = useState('')
   const [rating, setRating] = useState(5)
+  const [photoFile, setPhotoFile] = useState(null)
+  const [photoPreview, setPhotoPreview] = useState(null)
   const [loading, setLoading] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const [activeTab, setActiveTab] = useState('reviews')
@@ -193,14 +195,54 @@ function MainApp({ session }) {
     await fetchFriendships()
   }
 
+  const uploadPhoto = async (file) => {
+    const fileExt = file.name.split('.').pop()
+    const fileName = `${userId}/${Date.now()}.${fileExt}`
+
+    const { error } = await supabase.storage
+      .from('food-photos')
+      .upload(fileName, file)
+
+    if (error) {
+      console.error('Upload error:', error.message)
+      return null
+    }
+
+    const { data } = supabase.storage
+      .from('food-photos')
+      .getPublicUrl(fileName)
+
+    return data.publicUrl
+  }
+
+  const handlePhotoSelect = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setPhotoFile(file)
+      setPhotoPreview(URL.createObjectURL(file))
+    }
+  }
+
+  const removePhoto = () => {
+    setPhotoFile(null)
+    setPhotoPreview(null)
+  }
+
   const addEntry = async () => {
     if (!foodName) return
     setLoading(true)
 
+    let imageUrl = null
+    if (photoFile) {
+      imageUrl = await uploadPhoto(photoFile)
+    }
+
     if (editingId) {
+      const updateData = { food_name: foodName, location, review, rating }
+      if (imageUrl) updateData.image_url = imageUrl
       const { error } = await supabase
         .from('food_entries')
-        .update({ food_name: foodName, location, review, rating })
+        .update(updateData)
         .eq('id', editingId)
       if (error) console.error('Update error:', error.message)
       setEditingId(null)
@@ -210,6 +252,7 @@ function MainApp({ session }) {
         location,
         review,
         rating,
+        image_url: imageUrl,
         user_id: userId
       })
       if (error) console.error('Insert error:', error.message)
@@ -219,6 +262,8 @@ function MainApp({ session }) {
     setLocation('')
     setReview('')
     setRating(5)
+    setPhotoFile(null)
+    setPhotoPreview(null)
     await fetchEntries()
     setLoading(false)
   }
@@ -229,6 +274,8 @@ function MainApp({ session }) {
     setLocation(entry.location || '')
     setReview(entry.review || '')
     setRating(entry.rating)
+    setPhotoFile(null)
+    setPhotoPreview(entry.image_url || null)
     setActiveTab('reviews')
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -239,6 +286,8 @@ function MainApp({ session }) {
     setLocation('')
     setReview('')
     setRating(5)
+    setPhotoFile(null)
+    setPhotoPreview(null)
   }
 
   const deleteEntry = async (id) => {
@@ -285,6 +334,21 @@ function MainApp({ session }) {
             <input className="form-input" type="text" placeholder="Food name" value={foodName} onChange={(e) => setFoodName(e.target.value)} />
             <input className="form-input" type="text" placeholder="📍 Location (e.g. Joe's Pizza, NYC)" value={location} onChange={(e) => setLocation(e.target.value)} />
             <textarea className="form-input" placeholder="Write your review..." value={review} onChange={(e) => setReview(e.target.value)} />
+
+            <div className="photo-upload">
+              {photoPreview ? (
+                <div className="photo-preview">
+                  <img src={photoPreview} alt="Preview" />
+                  <button className="photo-remove" onClick={removePhoto}>✕</button>
+                </div>
+              ) : (
+                <label className="photo-upload-label">
+                  <span>📷 Add a photo</span>
+                  <input type="file" accept="image/*" onChange={handlePhotoSelect} />
+                </label>
+              )}
+            </div>
+
             <div className="rating-group">
               <label>Rating: {'⭐'.repeat(rating)}{'☆'.repeat(5 - rating)}</label>
               <input className="rating-slider" type="range" min="1" max="5" value={rating} onChange={(e) => setRating(Number(e.target.value))} />
@@ -306,6 +370,7 @@ function MainApp({ session }) {
                 <span className="entry-stars">{'⭐'.repeat(entry.rating)}</span>
               </div>
               {entry.location && <p className="entry-location">📍 {entry.location}</p>}
+              {entry.image_url && <img className="entry-photo" src={entry.image_url} alt={entry.food_name} />}
               {entry.review && <p className="entry-review">{entry.review}</p>}
               <div className="entry-bottom">
                 <small className="entry-date">
@@ -333,6 +398,7 @@ function MainApp({ session }) {
               </div>
               <p className="entry-author">by {getFriendName(entry.user_id)}</p>
               {entry.location && <p className="entry-location">📍 {entry.location}</p>}
+              {entry.image_url && <img className="entry-photo" src={entry.image_url} alt={entry.food_name} />}
               {entry.review && <p className="entry-review">{entry.review}</p>}
               <div className="entry-bottom">
                 <small className="entry-date">
@@ -455,17 +521,9 @@ function ResetPassword({ onDone }) {
     <div className="login-container">
       <h1>YumReviews 🍜</h1>
       <h2>Set your new password</h2>
-      <input
-        className="form-input"
-        type="password"
-        placeholder="New password"
-        value={newPassword}
-        onChange={(e) => setNewPassword(e.target.value)}
-      />
+      <input className="form-input" type="password" placeholder="New password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
       {message && (
-        <p className={message.startsWith('✅') ? 'login-success' : 'login-error'}>
-          {message}
-        </p>
+        <p className={message.startsWith('✅') ? 'login-success' : 'login-error'}>{message}</p>
       )}
       <button className="btn-primary" onClick={handleReset} style={{ width: '100%' }}>
         Update Password

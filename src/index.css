@@ -133,6 +133,68 @@ textarea.form-input {
   min-height: 80px;
 }
 
+/* Photo Upload */
+.photo-upload {
+  margin-bottom: 0.75rem;
+}
+
+.photo-upload-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #888;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+
+.photo-upload-label:hover {
+  border-color: #d35400;
+  color: #d35400;
+}
+
+.photo-upload input[type="file"] {
+  display: none;
+}
+
+.photo-preview {
+  position: relative;
+  margin-top: 0.5rem;
+}
+
+.photo-preview img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.photo-remove {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.photo-remove:hover {
+  background: rgba(229, 57, 53, 0.8);
+}
+
 /* Rating Slider */
 .rating-group {
   margin-bottom: 1rem;
@@ -253,6 +315,14 @@ textarea.form-input {
   color: #888;
   font-size: 0.9rem;
   margin: 0.25rem 0 0.5rem;
+}
+
+.entry-photo {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
 }
 
 .entry-review {
