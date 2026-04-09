@@ -36,6 +36,7 @@ function MainApp({ session }) {
   const [rating, setRating] = useState(5)
   const [photoFile, setPhotoFile] = useState(null)
   const [photoPreview, setPhotoPreview] = useState(null)
+  const [removeExistingPhoto, setRemoveExistingPhoto] = useState(false)
   const [loading, setLoading] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const [activeTab, setActiveTab] = useState('reviews')
@@ -220,6 +221,7 @@ function MainApp({ session }) {
     if (file) {
       setPhotoFile(file)
       setPhotoPreview(URL.createObjectURL(file))
+      setRemoveExistingPhoto(false)
     }
   }
 
@@ -239,13 +241,18 @@ function MainApp({ session }) {
 
     if (editingId) {
       const updateData = { food_name: foodName, location, review, rating }
-      if (imageUrl) updateData.image_url = imageUrl
+      if (imageUrl) {
+        updateData.image_url = imageUrl
+      } else if (removeExistingPhoto) {
+        updateData.image_url = null
+      }
       const { error } = await supabase
         .from('food_entries')
         .update(updateData)
         .eq('id', editingId)
       if (error) console.error('Update error:', error.message)
       setEditingId(null)
+      setRemoveExistingPhoto(false)
     } else {
       const { error } = await supabase.from('food_entries').insert({
         food_name: foodName,
@@ -264,6 +271,7 @@ function MainApp({ session }) {
     setRating(5)
     setPhotoFile(null)
     setPhotoPreview(null)
+    setRemoveExistingPhoto(false)
     await fetchEntries()
     setLoading(false)
   }
@@ -276,6 +284,7 @@ function MainApp({ session }) {
     setRating(entry.rating)
     setPhotoFile(null)
     setPhotoPreview(entry.image_url || null)
+    setRemoveExistingPhoto(false)
     setActiveTab('reviews')
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -288,6 +297,7 @@ function MainApp({ session }) {
     setRating(5)
     setPhotoFile(null)
     setPhotoPreview(null)
+    setRemoveExistingPhoto(false)
   }
 
   const deleteEntry = async (id) => {
@@ -335,7 +345,7 @@ function MainApp({ session }) {
             <input className="form-input" type="text" placeholder="📍 Location (e.g. Joe's Pizza, NYC)" value={location} onChange={(e) => setLocation(e.target.value)} />
             <textarea className="form-input" placeholder="Write your review..." value={review} onChange={(e) => setReview(e.target.value)} />
 
-<div className="photo-upload">
+            <div className="photo-upload">
               {photoPreview ? (
                 <div className="photo-preview">
                   <img src={photoPreview} alt="Preview" />
