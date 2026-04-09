@@ -200,7 +200,7 @@ function MainApp({ session }) {
     const fileName = `${userId}/${Date.now()}.${fileExt}`
 
     const { error } = await supabase.storage
-      .from('food-photos')
+      .from('Food-Photos')
       .upload(fileName, file)
 
     if (error) {
@@ -209,7 +209,7 @@ function MainApp({ session }) {
     }
 
     const { data } = supabase.storage
-      .from('food-photos')
+      .from('Food-Photos')
       .getPublicUrl(fileName)
 
     return data.publicUrl
