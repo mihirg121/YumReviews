@@ -240,15 +240,25 @@ function MainApp({ session }) {
     }
 
     if (editingId) {
-      const updateData = { food_name: foodName, location, review, rating }
+      const currentEntry = entries.find(e => e.id === editingId)
+      let finalImageUrl = currentEntry?.image_url || null
+
       if (imageUrl) {
-        updateData.image_url = imageUrl
-      } else if (removeExistingPhoto) {
-        updateData.image_url = null
+        finalImageUrl = imageUrl
       }
+      if (removeExistingPhoto) {
+        finalImageUrl = null
+      }
+
       const { error } = await supabase
         .from('food_entries')
-        .update(updateData)
+        .update({
+          food_name: foodName,
+          location,
+          review,
+          rating,
+          image_url: finalImageUrl
+        })
         .eq('id', editingId)
       if (error) console.error('Update error:', error.message)
       setEditingId(null)
