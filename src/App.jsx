@@ -335,7 +335,7 @@ function MainApp({ session }) {
             <input className="form-input" type="text" placeholder="📍 Location (e.g. Joe's Pizza, NYC)" value={location} onChange={(e) => setLocation(e.target.value)} />
             <textarea className="form-input" placeholder="Write your review..." value={review} onChange={(e) => setReview(e.target.value)} />
 
-            <div className="photo-upload">
+<div className="photo-upload">
               {photoPreview ? (
                 <div className="photo-preview">
                   <img src={photoPreview} alt="Preview" />
@@ -346,6 +346,14 @@ function MainApp({ session }) {
                   <span>📷 Add a photo</span>
                   <input type="file" accept="image/*" onChange={handlePhotoSelect} />
                 </label>
+              )}
+              {editingId && photoPreview && !photoFile && (
+                <button
+                  onClick={() => { setPhotoPreview(null); setRemoveExistingPhoto(true) }}
+                  style={{ marginTop: '0.5rem', background: 'none', border: 'none', color: '#e53935', cursor: 'pointer', fontSize: '0.85rem' }}
+                >
+                  🗑️ Remove photo from review
+                </button>
               )}
             </div>
 
