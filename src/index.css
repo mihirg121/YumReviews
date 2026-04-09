@@ -23,7 +23,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   padding-bottom: 1rem;
   border-bottom: 2px solid #f0e6d6;
 }
@@ -46,6 +46,47 @@ body {
 .btn-logout:hover {
   border-color: #d35400;
   color: #d35400;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #f0e6d6;
+}
+
+.tab {
+  flex: 1;
+  padding: 0.75rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #888;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.tab.active {
+  color: #d35400;
+  border-bottom-color: #d35400;
+  font-weight: 600;
+}
+
+.tab:hover {
+  color: #d35400;
+}
+
+.badge {
+  background: #e53935;
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 10px;
+  margin-left: 0.3rem;
+  vertical-align: top;
 }
 
 /* Form Card */
@@ -201,6 +242,19 @@ textarea.form-input {
   letter-spacing: 2px;
 }
 
+.entry-author {
+  color: #d35400;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0.1rem 0 0.4rem;
+}
+
+.entry-location {
+  color: #888;
+  font-size: 0.9rem;
+  margin: 0.25rem 0 0.5rem;
+}
+
 .entry-review {
   color: #555;
   font-size: 0.95rem;
@@ -243,6 +297,28 @@ textarea.form-input {
 .btn-edit:hover,
 .btn-delete:hover {
   opacity: 0.7;
+}
+
+/* Friend Cards */
+.friend-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.friend-result {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: #f0f8f0;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* Login Page */
